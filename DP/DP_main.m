@@ -38,7 +38,6 @@ trajs = generateTrajsVaryingSpeed(n_traj, n_points, pLimit, speed, sigma_noise);
 n_traj = trajs.n_traj;
 plotTrajs(trajs, 'initialization');
 
-
 %% DPGP
 sigma_noise = 1.0;
 sigma_input = 1;
@@ -109,10 +108,11 @@ for sweep_num = 1:n_sweep
           if (n_k == 0)
               n_k = alpha;
           end
+          
           %else
               %L_GP(k, j) = DP_traj_likelihood(sparseGPs(j).sparseGP_x, sparseGPs(j).sparseGP_y, trajs.data(k));
-              L_GP(k, j) = DP_traj_likelihood_indep(sparseGPs(j).sparseGP_x, sparseGPs(j).sparseGP_y, trajs.data(k));
-              L(k, j) = L_GP(k, j) + log (n_k / (trajs.n_traj-1+alpha));
+          L_GP(k, j) = DP_traj_likelihood_indep(sparseGPs(j).sparseGP_x, sparseGPs(j).sparseGP_y, trajs.data(k));
+          L(k, j) = L_GP(k, j) + log (n_k / (trajs.n_traj-1+alpha));
           %end
           %fprintf(sprintf('sweep: %d, k: %d, j: %d, n_k: %d \n', sweep_num, k ,j, n_k));
       end

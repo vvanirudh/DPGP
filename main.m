@@ -68,7 +68,6 @@ sparseGP_y = build_sparseGP(x, y, dy_dt, hyperparam);
 [y_vel_sparse, var_y_sparse] = sparseGP_predict(sparseGP_y, X_query, Y_query);
 plotSparseGP( X_query, Y_query, x_vel_sparse, y_vel_sparse, x, y, sparseGP_x, sparseGP_y);
 
-
 % debugging sparseGP_predict_distri.m
 pos = [0,0];
 pos_var = [1 0; 0 1];
@@ -82,18 +81,3 @@ dt = ones(num_steps,1);
 pos_var_in = [0.5, 0; 0, 0.5];
 pred_traj = sparseGP_trajPredict(sparseGP_x, sparseGP_y, starting_point, pos_var_in, dt, num_steps, speed);
 predPlot(pred_traj, sparseGP_x, sparseGP_y);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
