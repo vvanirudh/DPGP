@@ -52,3 +52,18 @@ cluster = zeros(n_traj, 2, n_sweep);
 cluster(:, :, 1) = unidrnd(trajs.n_clus, n_traj, 2, 1);
 
 trajs.cluster = cluster;
+count = twoagents_groupTraj(1);
+alpha = 0.5;
+
+% Initialize and fit the GPs to the current data
+twoagents_initialize_SparseGPs_array(hyperparam);
+
+%% main loop
+tic
+for sweep_num=1:n_sweep
+    trajs.sweep_count = sweep_num;
+    % Construct sparseGP for each motion pattern
+    if (sweep_num > 1)
+        twoagents_build_SparseGPs_array(hyperparam);
+    end
+end
