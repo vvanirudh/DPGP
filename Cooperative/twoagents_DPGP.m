@@ -16,6 +16,7 @@ addpath ../generate_traj
 addpath ../sample_traj
 addpath ../Gibbs
 addpath ../DP
+addpath genTraj
 
 % global variables
 global trajs sparseGPs
@@ -33,3 +34,21 @@ speed = 1.0;
 sigma_noise = 0.05;
 
 % Implement generateTwoAgentTrajs
+trajs = generateTwoAgentTrajs(n_traj, n_points, pLimit, speed, ...
+                              sigma_noise);
+
+n_traj = trajs.n_traj;
+
+%% Two Agent DPGP
+sigma_noise = 1.0;
+sigma_input = 1;
+hyperparam = [lx, ly, sigma_input, sigma_noise];
+n_sweep = 200;
+
+% Randomly assign trajectories to clusters
+trajs.n_clus = round(log(n_traj))*2; % * 2 because of two agent
+                                     % trajectories
+cluster = zeros(n_traj, 2, n_sweep);
+cluster(:, 1) = unidrnd(trajs.n_clus, n_traj, 2, 1);
+
+trajs.cluster = cluster;
