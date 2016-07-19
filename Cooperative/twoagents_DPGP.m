@@ -49,6 +49,6 @@ n_sweep = 200;
 trajs.n_clus = round(log(n_traj))*2; % * 2 because of two agent
                                      % trajectories
 cluster = zeros(n_traj, 2, n_sweep);
-cluster(:, 1) = unidrnd(trajs.n_clus, n_traj, 2, 1);
+cluster(:, :, 1) = unidrnd(trajs.n_clus, n_traj, 2, 1);
 
 trajs.cluster = cluster;
