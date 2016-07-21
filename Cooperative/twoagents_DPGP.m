@@ -39,12 +39,13 @@ trajs = generateTwoAgentTrajs(n_traj, n_points, pLimit, speed, ...
                               sigma_noise);
 
 n_traj = trajs.n_traj;
+%plotTrajs(trajs, 'initialization');
 
 %% Two Agent DPGP
 sigma_noise = 1.0;
 sigma_input = 1;
 hyperparam = [lx, ly, sigma_input, sigma_noise];
-n_sweep = 200;
+n_sweep = 2;
 
 % Randomly assign trajectories to clusters
 trajs.n_clus = round(log(n_traj))*2; % * 2 because of two agent
@@ -165,15 +166,15 @@ for sweep_num=1:n_sweep
                               p');
         
         % If both are assigned to the new cluster
-        if(z_k_1 > trajs.n_clus + 1 && z_k_2 > trajs.n_clus + 1)
+        if(z_k_1 > trajs.n_clus && z_k_2 > trajs.n_clus)
             z_k_1 = length(count) + 1;
             z_k_2 = length(count) + 1;
             count = [count ; 0];           
-        elseif (z_k_1 > trajs.n_clus+1) 
+        elseif (z_k_1 > trajs.n_clus) 
             % Only the 1st one
             z_k_1 = length(count) + 1;
             count = [count ; 0];
-        elseif (z_k_2 > trajs.n_clus+1)
+        elseif (z_k_2 > trajs.n_clus)
             % Only the second one
             z_k_2 = length(count) + 1;
             count = [count ; 0];
@@ -203,11 +204,26 @@ end
 timeElapsed = toc;
 fprintf(sprintf('time elasped: %fs',timeElapsed));
 
+keyboard()
 
 % calculate mean
 %% plotting
 
 burn_in = floor(n_sweep / 2);
 splicing = 2;
-[avgSample, mode, config, config_count] = ...
-    gibbs_sampling_postProcessing(trajs.cluster', burn_in, splicing);
+[avgSample1, mode1, config1, config_count1] = ...
+    gibbs_sampling_postProcessing(squeeze(trajs.cluster(:,1,:))', ...
+                                  burn_in, splicing);
+[avgSample2, mode2, config2, config_count2] = ...
+    gibbs_sampling_postProcessing(squeeze(trajs.cluster(:,2,:))', ...
+                                  burn_in, splicing);
+
+trajs.cluster(:, 1, end) = mode1';
+trajs.cluster(:, 2, end) = mode2';
+
+twoagents_plotTrajs(trajs, 'mode');
+
+trajs.cluster(:, 1, end) = avgSample1';
+trajs.cluster(:, 2, end) = avgSample2';
+
+twoagents_plotTrajs(trajs, 'avgSample');
