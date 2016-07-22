@@ -18,6 +18,7 @@ addpath ../Gibbs
 addpath ../DP
 addpath genTraj
 addpath ../external
+addpath twoagents_plotting
 
 % global variables
 global trajs sparseGPs
@@ -27,7 +28,7 @@ lx = 2;
 ly = 2;
 
 %% generate n trajectories for both agents
-n_traj = 50;
+n_traj = 7;
 n_points = 30;
 x_min = -5; x_max = 5; y_min = -5; y_max = 5;
 pLimit = [x_min, x_max, y_min, y_max];
@@ -45,7 +46,7 @@ n_traj = trajs.n_traj;
 sigma_noise = 1.0;
 sigma_input = 1;
 hyperparam = [lx, ly, sigma_input, sigma_noise];
-n_sweep = 2;
+n_sweep = 200;
 
 % Randomly assign trajectories to clusters
 trajs.n_clus = round(log(n_traj))*2; % * 2 because of two agent
@@ -204,7 +205,6 @@ end
 timeElapsed = toc;
 fprintf(sprintf('time elasped: %fs',timeElapsed));
 
-keyboard()
 
 % calculate mean
 %% plotting
@@ -221,9 +221,19 @@ splicing = 2;
 trajs.cluster(:, 1, end) = mode1';
 trajs.cluster(:, 2, end) = mode2';
 
+%keyboard()
 twoagents_plotTrajs(trajs, 'mode');
 
 trajs.cluster(:, 1, end) = avgSample1';
 trajs.cluster(:, 2, end) = avgSample2';
 
 twoagents_plotTrajs(trajs, 'avgSample');
+
+%twoagents_groupTraj(sweep_num);
+%twoagents_build_SparseGPs_array(hyperparam);
+%for i=1:trajs.n_traj
+%    ind_order = twoagents_findBestPattern(trajs.data1(i), ...
+%                                          trajs.data2(i));
+%    trajs.cluster(i, 1, end) = ind_order(1, 1);
+%    trajs.cluster(i, 2, end) = ind_order(2, 1);
+%end

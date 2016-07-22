@@ -23,7 +23,7 @@ var_y_vec_2 = diag(var_y_matrix_2);
 
 % PARAMETERS
 h = 0.5;
-alpha = 0.8;
+alpha = 1;
 
 likelihood = 0;
 currentTime = 0;
