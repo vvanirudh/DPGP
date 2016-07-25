@@ -4,7 +4,7 @@
 % by Anirudh Vemula, Jul 21, 2016
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [ind_order, ifNew] = twoagents_findBestPattern(traj1, ...
+function [ind1, ind2] = twoagents_findBestPattern(traj1, ...
                                                   traj2)
 
     global sparseGPs
@@ -15,7 +15,15 @@ function [ind_order, ifNew] = twoagents_findBestPattern(traj1, ...
     
     num_counts = zeros(n, n);
     alpha = 0;
-    ifNew = 0;
+    
+    % Obtain the total number of trajectories
+    numTrajs = 0;
+    for i=1:n
+        numTrajs = numTrajs + sparseGPs(i).count;
+    end
+    
+    % Get alpha value
+    alpha = traj1.DP_alpha;
     
     % find the best fitting pair of clusters
     for i=1:n
@@ -28,7 +36,14 @@ function [ind_order, ifNew] = twoagents_findBestPattern(traj1, ...
                                        sparseGPs(j).sparseGP_y, ...
                                        traj2, traj1);
             
-            num_counts(i,j)= sparseGPs()
+            num_counts(i, j) = log (sparseGPs(i).count / (numTrajs ...
+                                                          + alpha))/3 ...
+                + log (sparseGPs(j).count / (numTrajs + alpha))/3;                        
+        end
+    end
+            
+    L = L_GP + num_counts;
     
-
+    [ind1, ind2] = ind2sub(size(L), find(L == max(max(L))));
+    
 end

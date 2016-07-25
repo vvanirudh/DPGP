@@ -32,7 +32,7 @@ for i=1:trajs.n_clus
     sparseGPs(i).data.y = [];
     sparseGPs(i).data.dx_dt = [];
     sparseGPs(i).data.dy_dt = [];
-    sparseGPs(i).data.count = count(i);
+    sparseGPs(i).count = count(i);
     
     for j=1:length(indices_row)
        if indices_column(j)==1 

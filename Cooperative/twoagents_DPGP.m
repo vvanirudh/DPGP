@@ -221,19 +221,25 @@ splicing = 2;
 trajs.cluster(:, 1, end) = mode1';
 trajs.cluster(:, 2, end) = mode2';
 
-%keyboard()
 twoagents_plotTrajs(trajs, 'mode');
 
-trajs.cluster(:, 1, end) = avgSample1';
-trajs.cluster(:, 2, end) = avgSample2';
+%trajs.cluster(:, 1, end) = avgSample1';
+%trajs.cluster(:, 2, end) = avgSample2';
 
-twoagents_plotTrajs(trajs, 'avgSample');
+%twoagents_plotTrajs(trajs, 'avgSample');
 
-%twoagents_groupTraj(sweep_num);
-%twoagents_build_SparseGPs_array(hyperparam);
-%for i=1:trajs.n_traj
-%    ind_order = twoagents_findBestPattern(trajs.data1(i), ...
-%                                          trajs.data2(i));
-%    trajs.cluster(i, 1, end) = ind_order(1, 1);
-%    trajs.cluster(i, 2, end) = ind_order(2, 1);
-%end
+twoagents_groupTraj(sweep_num);
+twoagents_build_SparseGPs_array(hyperparam);
+for i=1:trajs.n_traj
+    [ind1, ind2] = twoagents_findBestPattern(trajs.data1(i), ...
+                                          trajs.data2(i));
+    trajs.cluster(i, 1, end) = ind1;
+    trajs.cluster(i, 2, end) = ind2;
+end
+twoagents_plotTrajs(trajs, 'reassigned cluster');
+
+
+count = twoagents_groupTraj(sweep_num);
+twoagents_build_SparseGPs_array(hyperparam);
+plotSparseGP_array(sparseGPs, 5);
+%mode
