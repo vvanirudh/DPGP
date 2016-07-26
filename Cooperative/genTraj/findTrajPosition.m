@@ -10,12 +10,12 @@ function [x, y] = findTrajPosition(traj, t)
 cum_t = cumsum(traj.dt);
 
 % Find the index with cum_t > current_time
-ind = find(cum_t > t);
+ind = find(cum_t <= t);
 
 % Return the (x,y) position
 if ~isempty(ind)
-    x = traj.x(ind(1));
-    y = traj.y(ind(2));
+    x = traj.x(ind(end));
+    y = traj.y(ind(end));
 else
     x = traj.x(end);
     y = traj.y(end);
