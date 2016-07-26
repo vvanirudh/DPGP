@@ -5,8 +5,9 @@
 % by Anirudh Vemula, Jul 18, 2016
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-clear all;
-close all;
+clearvars -except trajs
+%clear all;
+%close all;
 clc;
 
 % adding directory path
@@ -28,7 +29,7 @@ lx = 2;
 ly = 2;
 
 %% generate n trajectories for both agents
-n_traj = 7;
+n_traj = 50;
 n_points = 30;
 x_min = -5; x_max = 5; y_min = -5; y_max = 5;
 pLimit = [x_min, x_max, y_min, y_max];
@@ -40,7 +41,8 @@ trajs = generateTwoAgentTrajs(n_traj, n_points, pLimit, speed, ...
                               sigma_noise);
 
 n_traj = trajs.n_traj;
-%plotTrajs(trajs, 'initialization');
+twoagents_plotTrajs(trajs, 'initialization');
+%keyboard()
 
 %% Two Agent DPGP
 sigma_noise = 1.0;
@@ -126,11 +128,20 @@ for sweep_num=1:n_sweep
                 
                 % Now to calculate the likelihood of p(t2|b_j1, t1,
                 % b_j2)
+               
                 likelihood_2_GP = ...
                     DP_traj_likelihood_dep(sparseGPs(j2).sparseGP_x, ...
                                            sparseGPs(j2).sparseGP_y, ...
                                            trajs.data2(k), ...
                                            trajs.data1(k));                
+                
+                % the original formulation, for comparison
+                %likelihood_2_GP = ...
+                %    DP_traj_likelihood_indep(sparseGPs(j2).sparseGP_x, ...
+                %                             sparseGPs(j2).sparseGP_y, ...
+                %                             trajs.data2(k));
+                
+                
                 
                 likelihood_2 = likelihood_2_GP + log(n_k_2 / ...
                                                      (trajs.n_traj*2 ...
@@ -228,18 +239,18 @@ twoagents_plotTrajs(trajs, 'mode');
 
 %twoagents_plotTrajs(trajs, 'avgSample');
 
-twoagents_groupTraj(sweep_num);
-twoagents_build_SparseGPs_array(hyperparam);
-for i=1:trajs.n_traj
-    [ind1, ind2] = twoagents_findBestPattern(trajs.data1(i), ...
-                                          trajs.data2(i));
-    trajs.cluster(i, 1, end) = ind1;
-    trajs.cluster(i, 2, end) = ind2;
-end
-twoagents_plotTrajs(trajs, 'reassigned cluster');
+%twoagents_groupTraj(sweep_num);
+%twoagents_build_SparseGPs_array(hyperparam);
+%for i=1:trajs.n_traj
+%    [ind1, ind2] = twoagents_findBestPattern(trajs.data1(i), ...
+%                                          trajs.data2(i));
+%    trajs.cluster(i, 1, end) = ind1;
+%    trajs.cluster(i, 2, end) = ind2;
+%end
+%twoagents_plotTrajs(trajs, 'reassigned cluster');
 
 
-count = twoagents_groupTraj(sweep_num);
-twoagents_build_SparseGPs_array(hyperparam);
-plotSparseGP_array(sparseGPs, 5);
+%count = twoagents_groupTraj(sweep_num);
+%twoagents_build_SparseGPs_array(hyperparam);
+%plotSparseGP_array(sparseGPs, 5);
 %mode

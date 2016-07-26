@@ -38,49 +38,18 @@ while true
         
         if moveCase==1
             % Move agent 1
-            if x2(ind) > x1(ind)
-                x1(ind) = x1(ind) - threshold;
-                x1(ind-1) = x1(ind-1) - threshold/2;
-                x1(ind+1) = x1(ind+1) - threshold/2;
-            else
-                x1(ind) = x1(ind) + threshold;
-                x1(ind-1) = x1(ind-1) + threshold/2;
-                x1(ind+1) = x1(ind+1) + threshold/2;
-            end
             
-            if y2(ind) > y1(ind)
-                y1(ind) = y1(ind) - threshold;
-                y1(ind-1) = y1(ind-1) - threshold/2;
-                y1(ind+1) = y1(ind+1) - threshold/2;
-            else
-                y1(ind) = y1(ind) + threshold;
-                y1(ind-1) = y1(ind-1) + threshold/2;
-                y1(ind+1) = y1(ind+1) + threshold/2;
-            end
+            x1 = moveAgent(x2, x1, ind, threshold);
+            y1 = moveAgent(y2, y1, ind, threshold);
+                        
         elseif moveCase == 2
             % Move agent 2
-            if x1(ind) > x2(ind)
-                x2(ind) = x2(ind) - threshold;
-                x2(ind-1) = x2(ind-1) - threshold/2;
-                x2(ind+1) = x2(ind+1) - threshold/2;
-            else
-                x2(ind) = x2(ind) + threshold;
-                x2(ind-1) = x2(ind-1) + threshold/2;
-                x2(ind+1) = x2(ind+1) + threshold/2;
-            end
             
-            if y1(ind) > y2(ind)
-                y2(ind) = y2(ind) - threshold;
-                y2(ind-1) = y2(ind-1) - threshold/2;
-                y2(ind+1) = y2(ind+1) - threshold/2;
-            else
-                y2(ind) = y2(ind) + threshold;
-                y2(ind-1) = y2(ind-1) + threshold/2;
-                y2(ind+1) = y2(ind+1) + threshold/2;
-            end
+            x2 = moveAgent(x1, x2, ind, threshold);
+            y2 = moveAgent(y1, y2, ind, threshold);
+                        
         end    
     end
-
 end
 
 % Initialize the dt array
