@@ -37,17 +37,18 @@ n_points = 30;
 x_min = -5; x_max = 5; y_min = -5; y_max = 5;
 pLimit = [x_min, x_max, y_min, y_max];
 speed = 1.0;
-sigma_noise = 0.05;
+sigma_noise_traj = 0.05;
 
 % Implement generateTwoAgentTrajs
 if reinitialize_trajs
     trajs = generateTwoAgentTrajs(n_traj, n_points, pLimit, speed, ...
-                                  sigma_noise);
+                                  sigma_noise_traj);
 end
 
 n_traj = trajs.n_traj;
 if reinitialize_trajs
     twoagents_plotTrajs(trajs, 'initialization');
+    keyboard()
 end
 
 %% Two Agent DPGP
@@ -257,7 +258,31 @@ twoagents_build_SparseGPs_array(hyperparam);
 twoagents_plotTrajs(trajs, 'reassigned cluster');
 
 
-count = twoagents_groupTraj(sweep_num);
-twoagents_build_SparseGPs_array(hyperparam);
-plotSparseGP_array(sparseGPs, 5);
+%count = twoagents_groupTraj(sweep_num);
+%twoagents_build_SparseGPs_array(hyperparam);
+%plotSparseGP_array(sparseGPs, 5);
 %mode
+
+%% Prediction
+
+% Generate a new set of trajectories
+%n_traj_p = 1;
+%trajs_p = generateTwoAgentTrajs(n_traj_p, n_points, pLimit, speed, ...
+%                               sigma_noise_traj);
+
+% Cut the trajectories, so that we can predict their future path
+%trajs_p_partial = twoagents_partialTrajs(trajs_p);
+
+%n_traj_p = trajs_p_partial.n_traj;
+
+%for i=1:n_traj_p
+   
+%    [ind1, ind2] = twoagents_findBestPattern(trajs_p_partial.data1(i), ...
+%                                             trajs_p_partial.data2(i), ...
+%                                             indep_test);
+%    trajs_p_partial.cluster(i, 1, end) = ind1;
+%    trajs_p_partial.cluster(i, 2, end) = ind2;
+%end
+
+    
+%end
