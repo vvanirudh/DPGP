@@ -21,8 +21,8 @@ addpath ../external
 addpath twoagents_plotting
 
 % testing variables
-indep_test = true;
-reinitialize_trajs = false;
+indep_test = false;
+reinitialize_trajs = true;
 
 % global variables
 global trajs sparseGPs
@@ -32,7 +32,7 @@ lx = 2;
 ly = 2;
 
 %% generate n trajectories for both agents
-n_traj = 10;
+n_traj = 20;
 n_points = 30;
 x_min = -5; x_max = 5; y_min = -5; y_max = 5;
 pLimit = [x_min, x_max, y_min, y_max];
@@ -48,7 +48,7 @@ end
 n_traj = trajs.n_traj;
 if reinitialize_trajs
     twoagents_plotTrajs(trajs, 'initialization');
-    keyboard()
+    %keyboard()
 end
 
 %% Two Agent DPGP
@@ -58,7 +58,7 @@ hyperparam = [lx, ly, sigma_input, sigma_noise];
 n_sweep = 200;
 
 % Randomly assign trajectories to clusters
-trajs.n_clus = round(log(n_traj))*2; % * 2 because of two agent
+trajs.n_clus = round(log(n_traj*2)); % * 2 because of two agent
                                      % trajectories
 cluster = zeros(n_traj, 2, n_sweep);
 cluster(:, :, 1) = unidrnd(trajs.n_clus, n_traj, 2, 1);
@@ -238,29 +238,29 @@ splicing = 2;
 trajs.cluster(:, 1, end) = mode1';
 trajs.cluster(:, 2, end) = mode2';
 
-%twoagents_plotTrajs(trajs, 'mode');
+twoagents_plotTrajs(trajs, 'mode');
 
 %trajs.cluster(:, 1, end) = avgSample1';
 %trajs.cluster(:, 2, end) = avgSample2';
 
 %twoagents_plotTrajs(trajs, 'avgSample');
 
-twoagents_groupTraj(sweep_num);
-twoagents_build_SparseGPs_array(hyperparam);
-for i=1:trajs.n_traj
-    [ind1, ind2] = twoagents_findBestPattern(trajs.data1(i), ...
-                                          trajs.data2(i), indep_test);
-    trajs.cluster(i, 1, end) = ind1;
-    trajs.cluster(i, 2, end) = ind2;
-end
-twoagents_groupTraj(sweep_num);
-twoagents_build_SparseGPs_array(hyperparam);
-twoagents_plotTrajs(trajs, 'reassigned cluster');
-
-
-%count = twoagents_groupTraj(sweep_num);
+%twoagents_groupTraj(sweep_num);
 %twoagents_build_SparseGPs_array(hyperparam);
-%plotSparseGP_array(sparseGPs, 5);
+%for i=1:trajs.n_traj
+%    [ind1, ind2] = twoagents_findBestPattern(trajs.data1(i), ...
+%                                          trajs.data2(i), indep_test);
+%    trajs.cluster(i, 1, end) = ind1;
+%    trajs.cluster(i, 2, end) = ind2;
+%end
+%twoagents_groupTraj(sweep_num);
+%twoagents_build_SparseGPs_array(hyperparam);
+%twoagents_plotTrajs(trajs, 'reassigned cluster');
+
+
+count = twoagents_groupTraj(sweep_num);
+twoagents_build_SparseGPs_array(hyperparam);
+plotSparseGP_array(sparseGPs, 5);
 %mode
 
 %% Prediction

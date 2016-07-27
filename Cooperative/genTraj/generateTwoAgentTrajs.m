@@ -9,10 +9,11 @@ function trajs = generateTwoAgentTrajs(n_traj, n_points, pLimit, ...
                                        speed, sigma_noise)
 
 % Functions used to generate trajectories
-%func = {@sinusoidal, @quadratic, @cubic, @linear_func};
-%func = {@linear_func, @quadratic};
-func = {@linear_func};
+% func = {@sinusoidal, @quadratic, @cubic, @linear_func};
+% func = {@linear_func, @quadratic};
+% func = {@linear_func};
 % func = {@quadratic};
+func = {@linear_func, @linear_func2};
 
 % SET THRESHOLD
 threshold = 0.5;

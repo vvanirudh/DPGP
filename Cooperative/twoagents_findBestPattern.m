@@ -55,4 +55,5 @@ function [ind1, ind2] = twoagents_findBestPattern(traj1, ...
     
     [ind1, ind2] = ind2sub(size(L), find(L == max(max(L))));
     
+    
 end

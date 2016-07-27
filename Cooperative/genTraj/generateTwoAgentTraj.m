@@ -40,12 +40,12 @@ while true
         
         if moveCase==1
             % Move agent 1
-            x1 = moveAgent(x2, x1, ind, threshold);
-            y1 = moveAgent(y2, y1, ind, threshold);
+            x1 = moveAgent2(x2, x1, ind, threshold);
+            y1 = moveAgent2(y2, y1, ind, threshold);
         elseif moveCase == 2
             % Move agent 2
-            x2 = moveAgent(x1, x2, ind, threshold);
-            y2 = moveAgent(y1, y2, ind, threshold);
+            x2 = moveAgent2(x1, x2, ind, threshold);
+            y2 = moveAgent2(y1, y2, ind, threshold);
         end    
     end
 

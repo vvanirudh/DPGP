@@ -9,6 +9,9 @@ function x2_new = moveAgent(x1, x2, ind, threshold)
 % Function always assumes that agent 2 has to be moved w.r.t agent 1
 x2_new = x2;
 
+% Length of the trajectory
+l2 = length(x2);
+
 if x1(ind) > x2(ind)    
     x2_new(ind) = x2(ind) - threshold;        
 else
