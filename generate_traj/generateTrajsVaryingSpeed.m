@@ -1,6 +1,7 @@
 function trajs = generateTrajsVaryingSpeed(n_traj, n_points, pLimit, speed, sigma_noise)
     % all behavior patterns
-    func = {@sinusoidal, @quadratic, @cubic, @linear_func};
+%func = {@sinusoidal, @quadratic, @cubic, @linear_func};
+        func = {@linear_func, @linear_func2};
     num_func = length(func);
     traj_counter = 1;
     % initialize trajs structure

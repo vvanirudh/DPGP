@@ -6,7 +6,7 @@ function [x,y] = linear_func2(n, pLimits)
     y_min = pLimits(3)+offset;
     y_max = pLimits(4)-offset;
 
-    a = 0.5;
+    a = -0.5;
     b = 0.2;
     
     dx = (x_max - x_min) / n;
