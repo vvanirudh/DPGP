@@ -4,7 +4,7 @@
 % by Anirudh Vemula, Jul 26, 2016
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function x2_new = moveAgent2(x1, x2, ind, threshold)
+function x2_new = moveAgent(x1, x2, ind, threshold)
 
 % Function always assumes that agent 2 has to be moved w.r.t agent 1    
 x2_new = x2;
@@ -18,9 +18,9 @@ else
     x2_new(ind) = x2(ind) + threshold;
 end
 
-quad = polyfit([ind-3 ind l2-1 l2], [x2_new(ind-3) x2_new(ind) ...
+quad = polyfit([ind-5 ind l2-1 l2], [x2_new(ind-5) x2_new(ind) ...
                     x2_new(l2-1) x2_new(l2)], 3);
 
-x2_new(ind-3:end) = polyval(quad, ind-3:l2);
+x2_new(ind-5:end) = polyval(quad, ind-5:l2);
 
 end

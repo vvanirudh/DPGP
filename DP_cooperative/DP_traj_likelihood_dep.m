@@ -22,11 +22,12 @@ var_x_vec_2 = diag(var_x_matrix_2);
 var_y_vec_2 = diag(var_y_matrix_2);
 
 % PARAMETERS
-h = 0.5;
+h = 10;
 alpha = 1;
 
 likelihood = 0;
 currentTime = 0;
+minDist = Inf;
 for i=1:n2
    
     currentTime = currentTime + traj_2.dt(i);
@@ -53,16 +54,22 @@ for i=1:n2
         % Trajectory 1 position
         [x_1, y_1] = findTrajPosition(traj_1, currentTime);
         
+        % distance
+        dist = norm([x_new y_new] - [x_1 y_1]);
+        
+        if dist < minDist
+            minDist = dist;
+        end
+        
         % weight it with how close it is to the traj_1
         % The term we use is (1 - alpha * exp((-1/2h^2) * |t2(x,y) - t1(x,y)|))
-        lc = log (1 - alpha * exp( (-1/(2*h^2) * norm([x_new y_new] - ...
-                                                      [x_1 y_1]) ) ) );        
-        likelihood = likelihood + lc;
+        lc = log (1 - alpha * exp( (-1/(2*h^2) * dist ) ) );        
+        likelihood = likelihood - lc;
     end
     
-    %    [lx, ly, lc]
+    %[lx, ly, lc]
 end
-
+%minDist
 % Normalization on the basis of traj length
 likelihood = likelihood;% / length(traj_2.x);
 

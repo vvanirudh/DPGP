@@ -19,8 +19,9 @@ addpath ../sample_traj
 addpath ../Gibbs
 % global variables
 global trajs sparseGPs
-lx = 2;
-ly = 2;
+
+lx = 4;
+ly = 4;
 
 
 %% generate n trajectories
@@ -162,7 +163,7 @@ splicing = 2;
 trajs.cluster(:,end) = mode';
 plotTrajs(trajs, 'mode');
 
-trajs.cluster(:,end) = avgSample';
+%trajs.cluster(:,end) = avgSample';
 %plotTrajs(trajs, 'average sample');
 
 % reassgined trajectories based on their current cluster config
@@ -179,7 +180,7 @@ build_SparseGPs_array(hyperparam);
 
 count = groupTraj(sweep_num);
 build_SparseGPs_array(hyperparam);
-plotSparseGP_array(sparseGPs,5);
+plotSparseGP_array_xy(sparseGPs,5);
 %mode
 
 % history of DP samples

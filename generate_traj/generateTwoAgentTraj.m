@@ -37,7 +37,6 @@ while true
         ind = collisions(1);
         % Either move agent 1 or agent 2 (or both can also be included)
         moveCase = unidrnd(2);
-        %moveCase = 2;
         
         if moveCase==1
             % Move agent 1

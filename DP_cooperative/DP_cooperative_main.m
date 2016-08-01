@@ -8,7 +8,7 @@
 
 
 clearvars -except trajs;
-close all;
+%close all;
 clc;
 
 % adding directory path
@@ -19,28 +19,30 @@ addpath ../sample_traj
 addpath ../Gibbs
 % global variables
 global trajs sparseGPs
-lx = 2;
-ly = 2;
+lx = 4;
+ly = 4;
 
 
 %% generate n trajectories
 % to do: implement generateTrajs
-n_traj = 10;
+n_traj = 2;
 n_points = 30;
 x_min = -5; x_max = 5; y_min = -5; y_max = 5;
 pLimit = [x_min, x_max, y_min, y_max];
 speed = 1.0;
-sigma_noise = 0.05;
+sigma_noise_traj = 0.05;
 %sigma_noise = 0.01;
 % rng(1);
-%trajs = generateTrajsVaryingSpeedWithAvoidance(n_traj, n_points, pLimit, speed, sigma_noise);
+%trajs = generateTrajsVaryingSpeedWithAvoidance(n_traj, n_points,
+%pLimit, speed, sigma_noise_traj);
+load('2trajs.mat');
 
 n_traj = trajs.n_traj;
-%plotTrajs(trajs, 'initialization');
+plotTrajs(trajs, 'initialization');
 %keyboard()
 
 %% DPGP
-sigma_noise = 1.0;
+sigma_noise = 0.5;
 sigma_input = 1;
 hyperparam = [lx, ly, sigma_input, sigma_noise];
 n_sweep = 200;
@@ -110,10 +112,13 @@ for sweep_num = 1:n_sweep
               n_k = alpha;
           end
           
-          if mod(k,2)==1
+          if mod(k,2)==1 || mod(k,2)==0
               L_GP(k, j) = DP_traj_likelihood_indep(sparseGPs(j).sparseGP_x, ...
                                                     sparseGPs(j).sparseGP_y, trajs.data(k));
           else
+              % Debugging
+              %trackTrajs(trajs.data(k), trajs.data(k-1));
+              
               L_GP(k, j) = DP_traj_likelihood_dep(sparseGPs(j).sparseGP_x, ...
                                                   sparseGPs(j).sparseGP_y, ...
                                                   trajs.data(k), ...
@@ -186,7 +191,8 @@ build_SparseGPs_array(hyperparam);
 
 count = groupTraj(sweep_num);
 build_SparseGPs_array(hyperparam);
-plotSparseGP_array(sparseGPs,5);
+plotSparseGP_array_xy(sparseGPs, 5);
+%plotSparseGP_array(sparseGPs,5);
 %mode
 
 % history of DP samples
@@ -194,3 +200,35 @@ plotSparseGP_array(sparseGPs,5);
 %plot(config_count, 'r-o');
 %xlabel('DP sampled configuration label');
 %ylabel('counts')
+
+%% Prediction
+return
+%keyboard()
+% Generate a new set of trajectories
+n_traj_p = 1;
+trajs_p = generateTrajsVaryingSpeedWithAvoidance(n_traj_p, n_points, ...
+                                                 pLimit, speed, ...
+                                                 sigma_noise_traj);
+
+n_traj_p = trajs_p.n_traj;
+
+% Truncate the trajectories
+trajs_p_partial = truncateTrajs(trajs_p);
+
+% Cluster the truncated trajectories
+for i=1:n_traj_p
+    trajs_p_partial.data(i).DP_alpha = alpha;
+    ind_order = findBestPattern(trajs_p_partial.data(i));
+    trajs_p_partial.cluster(i, end) = ind_order(1);
+    
+end
+
+% Plot the complete trajectories
+plotTrajs(trajs_p, 'complete test trajectories');
+
+% Plot the partial trajectories
+plotTrajs(trajs_p_partial, 'partial test trajectories');
+
+% Predict the rest of the trajectories according to respective
+% cluster
+trajs_c = predictTrajs(trajs_p_partial, 8);
