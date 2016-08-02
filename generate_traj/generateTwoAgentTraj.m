@@ -35,18 +35,26 @@ while true
         break
     else
         ind = collisions(1);
-        % Either move agent 1 or agent 2 (or both can also be included)
-        moveCase = unidrnd(2);
+        % Either move agent 1 or agent 2 (or both can also be
+        % included)
         
-        if moveCase==1
+        %moveCase = unidrnd(2);
+        
+        %if moveCase==1
             % Move agent 1
-            x1 = moveAgent(x2, x1, ind, threshold);
-            y1 = moveAgent(y2, y1, ind, threshold);
-        elseif moveCase == 2
+            %    x1 = moveAgent(x2, x1, ind, threshold);
+            %y1 = moveAgent(y2, y1, ind, threshold);
+            %elseif moveCase == 2
             % Move agent 2
-            x2 = moveAgent(x1, x2, ind, threshold);
-            y2 = moveAgent(y1, y2, ind, threshold);
-        end    
+            %x2 = moveAgent(x1, x2, ind, threshold);
+            %y2 = moveAgent(y1, y2, ind, threshold);
+            %end    
+        
+        % Move both agents
+        x1 = moveAgent(x2, x1, ind, threshold);
+        y1 = moveAgent(y2, y1, ind, threshold);
+        x2 = moveAgent(x1, x2, ind, threshold);
+        y2 = moveAgent(y1, y2, ind, threshold);
     end
 
 end
