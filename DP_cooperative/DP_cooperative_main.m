@@ -181,7 +181,7 @@ groupTraj(sweep_num);
 build_SparseGPs_array(hyperparam);
 for i = 1:trajs.n_traj
     ind_order = findBestPattern(trajs.data(i));
-   trajs.cluster(i,end) = ind_order(1);
+    trajs.cluster(i,end) = ind_order(1);
 end
 
 %plotTrajs(trajs, 'reassigned cluster');
