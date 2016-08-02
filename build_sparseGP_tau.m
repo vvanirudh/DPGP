@@ -51,6 +51,7 @@ function sparseGP = build_sparseGP_tau(x_obs, y_obs, tau_obs, speed, ...
         Kt_xx = kxx + kx' * C * kx;
         
         q = (speed(i) - alpha'*kx) / (Kt_xx + sigma_noise^2);
+        keyboard()
         r = -1 / (Kt_xx + sigma_noise^2);
         
         e_hat = Q * kx;
