@@ -1,6 +1,16 @@
 function sparseGP = build_sparseGP_tau(x_obs, y_obs, tau_obs, speed, ...
-                                   hyperparam_0)
+                                   hyperparam_0, ifShift)
 
+    
+    if (nargin == 5)
+        ifShift = 0;
+    end
+    
+    if (ifShift >=1)
+        x_obs = [x_obs; x_obs+0.5; x_obs-0.5];
+        y_obs = [y_obs; y_obs+0.5; y_obs-0.5];
+        tau_obs = [tau_obs; tau_obs+0.5; tau_obs-0.5];
+    end
     
     % permutate the order of input trajectory
     reorder = randperm(length(x_obs));
@@ -25,11 +35,18 @@ function sparseGP = build_sparseGP_tau(x_obs, y_obs, tau_obs, speed, ...
     sparseGP.budget = 5;
     
     %% initialization
-    in1 = [x_obs(1), y_obs(1), tau_obs(1)];
-    alpha = speed(1) / Gaussian_kernel_tau(in1, in1, ...
-                                           sparseGP.hyperparam);
-    C = -1 / Gaussian_kernel_tau(in1, in1, sparseGP.hyperparam);
-    Q = 1 / Gaussian_kernel_tau(in1, in1, sparseGP.hyperparam, 0);
+    gkt = Gaussian_kernel_tau(x_obs(1), y_obs(1), tau_obs(1), x_obs(1), ...
+                              y_obs(1), tau_obs(1), ...
+                              sparseGP.hyperparam);
+    gkt_0 = Gaussian_kernel_tau(x_obs(1), y_obs(1), tau_obs(1), x_obs(1), ...
+                              y_obs(1), tau_obs(1), ...
+                              sparseGP.hyperparam, 0);
+    
+    
+    alpha = speed(1) / gkt;
+    
+    C = -1 / gkt;
+    Q = 1 / gkt_0;
 
     %% include into BV
     sparseGP.BV_x = x_obs(1);
@@ -37,21 +54,24 @@ function sparseGP = build_sparseGP_tau(x_obs, y_obs, tau_obs, speed, ...
     sparseGP.BV_tau = tau_obs(1);
     sparseGP.BV_speed = speed(1);
     numBV = 1;
-    sigma_noise = sparseGP.hyperparam(4);
+    sigma_noise = sparseGP.hyperparam(5);
     
     %% main loop
     for i=2:n
-        in_bv = [sparseGP.BV_x, sparseGP.BV_y, sparseGP.BV_tau];
-        in_i = [x_obs(i), y_obs(i), tau_obs(i)];
+        %in_bv = [sparseGP.BV_x', sparseGP.BV_y', sparseGP.BV_tau'];
+        %in_i = [x_obs(i), y_obs(i), tau_obs(i)];                
         
-        kx = Gaussian_kernel_tau(in_bv, in_i, sparseGP.hyperparam, ...
-                                 0);
-        kxx = Gaussian_kernel_tau(in_i, in_i, sparseGP.hyperparam, ...
-                                  0);
+        kx = Gaussian_kernel_tau(sparseGP.BV_x, sparseGP.BV_y, ...
+                                 sparseGP.BV_tau, x_obs(i), y_obs(i), ...
+                                 tau_obs(i), sparseGP.hyperparam, 0);
+        
+        kxx = Gaussian_kernel_tau(x_obs(i), y_obs(i), tau_obs(i), ...
+                                  x_obs(i), y_obs(i), tau_obs(i), ...
+                                  sparseGP.hyperparam, 0);
+                
         Kt_xx = kxx + kx' * C * kx;
-        
+        %keyboard()
         q = (speed(i) - alpha'*kx) / (Kt_xx + sigma_noise^2);
-        keyboard()
         r = -1 / (Kt_xx + sigma_noise^2);
         
         e_hat = Q * kx;
@@ -107,8 +127,7 @@ function sparseGP = build_sparseGP_tau(x_obs, y_obs, tau_obs, speed, ...
            
            numBV = numBV - 1;
            sparseGP.BV_x = [sparseGP.BV_x(1:min_index-1), sparseGP.BV_x(min_index+1:end)];
-           sparseGP.BV_y = [sparseGP.BV_y(1:min_index-1), ...
-                            sparseGP.BV_y(min_index+1:end)];
+           sparseGP.BV_y = [sparseGP.BV_y(1:min_index-1), sparseGP.BV_y(min_index+1:end)];
            sparseGP.BV_tau = [sparseGP.BV_tau(1:min_index-1), sparseGP.BV_tau(min_index+1:end)];
            sparseGP.BV_speed = [sparseGP.BV_speed(1:min_index-1), sparseGP.BV_speed(min_index+1:end)];
            

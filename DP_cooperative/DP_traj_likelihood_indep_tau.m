@@ -3,10 +3,10 @@ function likelihood = DP_traj_likelihood_indep_tau(sparseGP_x, ...
 
     n = length(traj.x);
 
-    [mu_x_vec, var_x_matrix] = sparseGP_predict(sparseGP_x, traj.x, ...
-                                                traj.y, traj.tau);
-    [mu_y_vec, var_y_matrix] = sparseGP_predict(sparseGP_y, traj.x, ...
-                                                traj.y, traj.tau);
+    [mu_x_vec, var_x_matrix] = sparseGP_predict_tau(sparseGP_x, traj.x, ...
+                                                    traj.y, traj.tau);
+    [mu_y_vec, var_y_matrix] = sparseGP_predict_tau(sparseGP_y, traj.x, ...
+                                                    traj.y, traj.tau);
 
     var_x_vec = diag(var_x_matrix);
     var_y_vec = diag(var_y_matrix);
@@ -45,6 +45,9 @@ function likelihood = DP_traj_likelihood_indep_tau(sparseGP_x, ...
     end
     % normalization based on traj length
     likelihood = likelihood; %/(length(traj.x));
-
-
+    
+    if isnan(likelihood)
+        keyboard()
+    end
+    
 end

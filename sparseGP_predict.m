@@ -15,6 +15,7 @@ kxx = Gaussian_kernel(x_query, y_query, x_query, y_query, hyperparam,1);
 mu = kx * sparseGP.alpha;
 var = abs(kxx + kx * sparseGP.C * kx');
 
+
 % to account for variance due to shift
 x_trans = [-0.5, 0, 0.5];
 y_trans = [-0.5, 0, 0.5];

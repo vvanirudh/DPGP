@@ -91,8 +91,8 @@ function [t1, t2] = processTrajWithTau(x1, y1, dt1, x2, y2, dt2, ...
         tau2(i) = tau_curr;
     end
     
-    tau1(end) = 10;
-    tau2(end) = 10;
+    tau1(end) = 5;
+    tau2(end) = 5;
     
     
     % Noise

@@ -35,7 +35,7 @@ sigma_noise_traj = 0.05;
 % rng(1);
 %trajs = generateTrajsVaryingSpeedWithAvoidance(n_traj, n_points,
 %pLimit, speed, sigma_noise_traj);
-load('2trajs.mat');
+%load('2trajs.mat');
 
 n_traj = trajs.n_traj;
 plotTrajs(trajs, 'initialization');
@@ -45,7 +45,7 @@ plotTrajs(trajs, 'initialization');
 sigma_noise = 0.5;
 sigma_input = 1;
 hyperparam = [lx, ly, sigma_input, sigma_noise];
-n_sweep = 200;
+n_sweep = 500;
 % randomly assign trajectories to clusters
 % to do: implement initialization routine
 % to do: keep track of all samples (Gibbs sampling)
