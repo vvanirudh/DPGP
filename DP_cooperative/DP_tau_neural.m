@@ -1,7 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Implementation of DPGP with (x,y,tau)
-% GP regression
-% by Anirudh Vemula, Aug 1, 2016
+% GP regression and neural network kernel
+% for tau
+% by Anirudh Vemula, Aug 5, 2016
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clearvars -except trajs;
@@ -22,10 +23,13 @@ global trajs sparseGPs
 % Length scales
 lx = 4;
 ly = 4;
-ltau = 0.3;
+%ltau = 0.3;
+% Need to set this parameters correctly
+sigma = 2; 
+sigma0 = 2;
 
 %% generate n trajectories
-n_traj = 10;
+n_traj = 5;
 n_points = 30;
 x_min = -5; x_max = 5; y_min = -5; y_max = 5;
 pLimit = [x_min, x_max, y_min, y_max];
@@ -34,6 +38,7 @@ sigma_noise_traj = 0;
 
 trajs = generateTrajsWithAvoidanceAndTau(n_traj, n_points, pLimit, ...
                                          speed, sigma_noise_traj);
+
 %load('2trajs1straightwithtau.mat');
 
 n_traj = trajs.n_traj;
@@ -43,7 +48,8 @@ n_traj = trajs.n_traj;
 %% DPGP
 sigma_noise = 0.5;
 sigma_input = 1;
-hyperparam = [lx, ly, ltau, sigma_input, sigma_noise];
+%hyperparam = [lx, ly, ltau, sigma_input, sigma_noise];
+hyperparam = [lx, ly, sigma_input, sigma_noise, sigma0, sigma];
 n_sweep = 200;
 % randomly assign trajectories to clusters
 % to do: implement initialization routine
@@ -59,7 +65,8 @@ cluster(:,1) = unidrnd(trajs.n_clus, n_traj,1);
 trajs.cluster = cluster;
 count = groupTraj_tau(1);
 alpha = 0.5;
-initialize_SparseGPs_array_tau(hyperparam);
+%initialize_SparseGPs_array_tau(hyperparam);
+initialize_SparseGPs_array_tau_neural(hyperparam);
 
 %% main loop
 tic
@@ -68,7 +75,8 @@ for sweep_num = 1:n_sweep
   % construct sparseGP for each motion pattern
   % to do: call sparseGP constructor
   if (sweep_num > 1)
-      build_SparseGPs_array_tau(hyperparam);
+      %build_SparseGPs_array_tau(hyperparam);
+      build_SparseGPs_array_tau_neural(hyperparam);
   end
   % for initialization
   %if (sweep_num == 1)
@@ -153,7 +161,8 @@ trajs.cluster(:,end) = mode';
 
 % reassgined trajectories based on their current cluster config
 groupTraj_tau(sweep_num);
-build_SparseGPs_array_tau(hyperparam);
+%build_SparseGPs_array_tau(hyperparam);
+build_SparseGPs_array_tau_neural(hyperparam);
 for i = 1:trajs.n_traj
     ind_order = findBestPattern_tau(trajs.data(i));
     trajs.cluster(i,end) = ind_order(1);
@@ -161,8 +170,9 @@ end
 
 plotTrajs(trajs, 'reassigned cluster');
 
-build_SparseGPs_array_tau(hyperparam);
+%build_SparseGPs_array_tau(hyperparam);
+build_SparseGPs_array_tau_neural(hyperparam);
 count = groupTraj_tau(sweep_num);
-build_SparseGPs_array_tau(hyperparam);
+%build_SparseGPs_array_tau(hyperparam);
+build_SparseGPs_array_tau_neural(hyperparam);
 plotSparseGP_array_xytau(sparseGPs, 5);
-

@@ -13,7 +13,7 @@ function plotSparseGP_array_xytau(sparseGPs, max_shown_pattern, ifLoc_in)
         y_min = min(sparseGPs(i).data.y);
         y_max = max(sparseGPs(i).data.y);
         tau_min = min(sparseGPs(i).data.tau);
-        tau_max = max(sparseGPs(i).data.tau);
+        tau_max = max(sparseGPs(i).data.tau)+0.5;
         
         x_query = x_min: 0.5: x_max;
         y_query = y_min: 0.5: y_max;

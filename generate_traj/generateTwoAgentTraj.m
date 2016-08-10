@@ -51,10 +51,10 @@ while true
             %end    
         
         % Move both agents
-        x1 = moveAgent(x2, x1, ind, threshold);
-        y1 = moveAgent(y2, y1, ind, threshold);
-        x2 = moveAgent(x1, x2, ind, threshold);
-        y2 = moveAgent(y1, y2, ind, threshold);
+        x1 = moveAgentStraight(x2, x1, ind, threshold);
+        y1 = moveAgentStraight(y2, y1, ind, threshold);
+        x2 = moveAgentStraight(x1, x2, ind, threshold);
+        y2 = moveAgentStraight(y1, y2, ind, threshold);
     end
 
 end
