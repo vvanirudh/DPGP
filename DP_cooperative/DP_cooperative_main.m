@@ -25,7 +25,7 @@ ly = 4;
 
 %% generate n trajectories
 % to do: implement generateTrajs
-n_traj = 2;
+n_traj = 10;
 n_points = 30;
 x_min = -5; x_max = 5; y_min = -5; y_max = 5;
 pLimit = [x_min, x_max, y_min, y_max];
@@ -33,9 +33,8 @@ speed = 1.0;
 sigma_noise_traj = 0.05;
 %sigma_noise = 0.01;
 % rng(1);
-%trajs = generateTrajsVaryingSpeedWithAvoidance(n_traj, n_points,
-%pLimit, speed, sigma_noise_traj);
-load('2trajs.mat');
+trajs = generateTrajsVaryingSpeedWithAvoidance(n_traj, n_points, pLimit, speed, sigma_noise_traj);
+%load('2trajs.mat');
 
 n_traj = trajs.n_traj;
 plotTrajs(trajs, 'initialization');
@@ -112,7 +111,7 @@ for sweep_num = 1:n_sweep
               n_k = alpha;
           end
           
-          if mod(k,2)==1 || mod(k,2)==0
+          if mod(k,2)==1
               L_GP(k, j) = DP_traj_likelihood_indep(sparseGPs(j).sparseGP_x, ...
                                                     sparseGPs(j).sparseGP_y, trajs.data(k));
           else
